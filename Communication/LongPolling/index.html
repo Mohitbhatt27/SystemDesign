@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long Polling Example</title>
+    <script>
+      let initial = {}
+        function startLongPolling(currentData) {
+            
+              const url = `/api/long-poll/?dataId=${currentData.id}`; // Assuming 'currentData' has an 'id' property for the API endpoint
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        const container = document.getElementById('data-container');
+                        container.innerHTML = `${data.message}`; // Assuming the server returns a JSON object with a 'message' field
+                        startLongPolling(data); // Continue polling
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        setTimeout(poll, 5000); // Retry after 5 seconds on error
+                    });
+            };
+            
+        startLongPolling(initial);
+    </script>
+</head>
+<body">
+    <h1>Long Polling Example</h1>
+    <div id="data-container"></div>
+</body>
+</html>
